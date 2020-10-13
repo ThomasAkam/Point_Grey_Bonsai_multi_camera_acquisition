@@ -10,20 +10,14 @@ This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-f
 ### Dependencies:
 
 - [Python 3](https://www.python.org/)
-
-- [Bonsai 2.4](https://bitbucket.org/horizongir/bonsai/downloads/) with the following libraries installed using the package manager.
+- [Bonsai](https://bonsai-rx.org/) with the following libraries installed using the package manager.
   - PointGrey library
   - Vision library
   - Vision design library
-
 - Point Grey FlyCapture SDK version 2.11.3.425, see bonsai user group post [here](https://groups.google.com/forum/#!msg/bonsai-users/Wq2Bo1DnCD8/jb0BfvIVAgAJ) for download link.
-
 - [FFMPEG / libav](https://developer.nvidia.com/ffmpeg) 
-
 - [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit)
-
 - [NVENC compatible NVIDIA GPU](https://developer.nvidia.com/video-encode-decode-gpu-support-matrix)
-
 - Point Grey Camera
 
 *Note:* Consumer grade NVIDIA GPUs (GeForce) are typically software restricted to support a maximum of 2 concurrent NVENC sessions. The [Keylase driver patch](https://github.com/keylase/nvidia-patch) can be used to remove this restriction allowing video data from more than 2 cameras to be compressed in parallel on a single graphics card.

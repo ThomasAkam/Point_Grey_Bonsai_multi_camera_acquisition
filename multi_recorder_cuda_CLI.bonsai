@@ -1,543 +1,311 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<WorkflowBuilder Version="2.3.0">
-  <Workflow xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:q3="clr-namespace:Bonsai.PointGrey;assembly=Bonsai.PointGrey" xmlns:q2="clr-namespace:Bonsai.IO;assembly=Bonsai.System" xmlns:q1="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision" xmlns="https://horizongir.org/bonsai">
+<WorkflowBuilder Version="2.5.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
+                 xmlns:p1="clr-namespace:Bonsai.PointGrey;assembly=Bonsai.PointGrey"
+                 xmlns:io="clr-namespace:Bonsai.IO;assembly=Bonsai.System"
+                 xmlns:cv="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision"
+                 xmlns="https://bonsai-rx.org/2018/workflow">
+  <Workflow>
     <Nodes>
+      <Expression xsi:type="NestedWorkflow">
+        <Name>Box1</Name>
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="FileName" DisplayName="PinFileName" />
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="DueTime" DisplayName="StartTime" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:Timer">
+                <rx:DueTime>PT23H</rx:DueTime>
+                <rx:Period>PT23H</rx:Period>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="Index" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="p1:FlyCapture">
+                <p1:Index>0</p1:Index>
+                <p1:ColorProcessing>Default</p1:ColorProcessing>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Image</Selector>
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Metadata</Selector>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:SubscribeWhen" />
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>embeddedGPIOPinState</Selector>
+            </Expression>
+            <Expression xsi:type="io:CsvWriter">
+              <io:FileName>temp/empty1.csv</io:FileName>
+              <io:Append>false</io:Append>
+              <io:Overwrite>true</io:Overwrite>
+              <io:Suffix>None</io:Suffix>
+              <io:IncludeHeader>false</io:IncludeHeader>
+              <io:CompatibilityMode>true</io:CompatibilityMode>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:SubscribeWhen" />
+            </Expression>
+            <Expression xsi:type="WorkflowOutput" />
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="9" Label="Source2" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="2" To="7" Label="Source2" />
+            <Edge From="2" To="10" Label="Source2" />
+            <Edge From="3" To="4" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+            <Edge From="4" To="6" Label="Source1" />
+            <Edge From="5" To="10" Label="Source1" />
+            <Edge From="6" To="7" Label="Source1" />
+            <Edge From="7" To="8" Label="Source1" />
+            <Edge From="8" To="9" Label="Source1" />
+            <Edge From="10" To="11" Label="Source1" />
+          </Edges>
+        </Workflow>
+      </Expression>
       <Expression xsi:type="Combinator">
-        <Combinator xsi:type="q1:ImageWriter">
-          <q1:Path>\\.\pipe\videopipe1</q1:Path>
-          <q1:Suffix>None</q1:Suffix>
-          <q1:Overwrite>false</q1:Overwrite>
+        <Combinator xsi:type="cv:ImageWriter">
+          <cv:Path>\\.\pipe\videopipe1</cv:Path>
+          <cv:Suffix>None</cv:Suffix>
+          <cv:Overwrite>false</cv:Overwrite>
         </Combinator>
       </Expression>
       <Expression xsi:type="NestedWorkflow">
         <Name>Box2</Name>
         <Workflow>
           <Nodes>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="FileName" DisplayName="PinFileName" />
             </Expression>
-            <Expression xsi:type="q2:CsvWriter">
-              <q2:FileName>D:\LBurg\Pavtometry_Video\PP3_pinstate_2019-03-26-134513.csv</q2:FileName>
-              <q2:Append>false</q2:Append>
-              <q2:Overwrite>true</q2:Overwrite>
-              <q2:Suffix>None</q2:Suffix>
-              <q2:IncludeHeader>false</q2:IncludeHeader>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.Image</Selector>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.embeddedGPIOPinState</Selector>
-            </Expression>
-            <Expression xsi:type="ExternalizedPropertyOfStringCsvWriter">
-              <MemberName>FileName</MemberName>
-              <Name>PinFileName</Name>
-              <Value>empty.csv</Value>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="DueTime" DisplayName="StartTime" />
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
+              <Combinator xsi:type="rx:Timer">
+                <rx:DueTime>PT23H</rx:DueTime>
+                <rx:Period>PT23H</rx:Period>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="Index" />
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="Timer">
-                <DueTime>PT0S</DueTime>
-                <Period>PT23H</Period>
+              <Combinator xsi:type="p1:FlyCapture">
+                <p1:Index>1</p1:Index>
+                <p1:ColorProcessing>Default</p1:ColorProcessing>
               </Combinator>
             </Expression>
             <Expression xsi:type="MemberSelector">
-              <Selector>Source.Metadata</Selector>
+              <Selector>Image</Selector>
             </Expression>
-            <Expression xsi:type="ExternalizedTimeSpanOfTimer">
-              <MemberName>DueTime</MemberName>
-              <Name>StartTime</Name>
-              <Value>PT23H</Value>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Metadata</Selector>
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="q3:FlyCapture">
-                <q3:Index>2</q3:Index>
-                <q3:ColorProcessing>Default</q3:ColorProcessing>
-              </Combinator>
+              <Combinator xsi:type="rx:SubscribeWhen" />
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>embeddedGPIOPinState</Selector>
+            </Expression>
+            <Expression xsi:type="io:CsvWriter">
+              <io:FileName>temp/empty2.csv</io:FileName>
+              <io:Append>false</io:Append>
+              <io:Overwrite>true</io:Overwrite>
+              <io:Suffix>None</io:Suffix>
+              <io:IncludeHeader>false</io:IncludeHeader>
+              <io:CompatibilityMode>true</io:CompatibilityMode>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:SubscribeWhen" />
             </Expression>
             <Expression xsi:type="WorkflowOutput" />
-            <Expression xsi:type="ExternalizedPropertyOfInt32FlyCapture">
-              <MemberName>Index</MemberName>
-              <Name>Index</Name>
-              <Value>0</Value>
-            </Expression>
           </Nodes>
           <Edges>
-            <Edge>
-              <From>0</From>
-              <To>10</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>2</From>
-              <To>0</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>3</From>
-              <To>1</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>4</From>
-              <To>1</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>5</From>
-              <To>3</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>5</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>0</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>7</From>
-              <To>5</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>8</From>
-              <To>6</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>2</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>7</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>11</From>
-              <To>9</To>
-              <Label>Source1</Label>
-            </Edge>
+            <Edge From="0" To="9" Label="Source2" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="2" To="7" Label="Source2" />
+            <Edge From="2" To="10" Label="Source2" />
+            <Edge From="3" To="4" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+            <Edge From="4" To="6" Label="Source1" />
+            <Edge From="5" To="10" Label="Source1" />
+            <Edge From="6" To="7" Label="Source1" />
+            <Edge From="7" To="8" Label="Source1" />
+            <Edge From="8" To="9" Label="Source1" />
+            <Edge From="10" To="11" Label="Source1" />
           </Edges>
         </Workflow>
       </Expression>
       <Expression xsi:type="Combinator">
-        <Combinator xsi:type="q1:ImageWriter">
-          <q1:Path>\\.\pipe\videopipe2</q1:Path>
-          <q1:Suffix>None</q1:Suffix>
-          <q1:Overwrite>false</q1:Overwrite>
-        </Combinator>
-      </Expression>
-      <Expression xsi:type="NestedWorkflow">
-        <Name>Box1</Name>
-        <Workflow>
-          <Nodes>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
-            </Expression>
-            <Expression xsi:type="q2:CsvWriter">
-              <q2:FileName>empty.csv</q2:FileName>
-              <q2:Append>false</q2:Append>
-              <q2:Overwrite>true</q2:Overwrite>
-              <q2:Suffix>None</q2:Suffix>
-              <q2:IncludeHeader>false</q2:IncludeHeader>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.Image</Selector>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.embeddedGPIOPinState</Selector>
-            </Expression>
-            <Expression xsi:type="ExternalizedPropertyOfStringCsvWriter">
-              <MemberName>FileName</MemberName>
-              <Name>PinFileName</Name>
-              <Value>empty.csv</Value>
-            </Expression>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
-            </Expression>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="Timer">
-                <DueTime>PT23H</DueTime>
-                <Period>PT23H</Period>
-              </Combinator>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.Metadata</Selector>
-            </Expression>
-            <Expression xsi:type="ExternalizedTimeSpanOfTimer">
-              <MemberName>DueTime</MemberName>
-              <Name>StartTime</Name>
-              <Value>PT23H</Value>
-            </Expression>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="q3:FlyCapture">
-                <q3:Index>0</q3:Index>
-                <q3:ColorProcessing>Default</q3:ColorProcessing>
-              </Combinator>
-            </Expression>
-            <Expression xsi:type="WorkflowOutput" />
-            <Expression xsi:type="ExternalizedPropertyOfInt32FlyCapture">
-              <MemberName>Index</MemberName>
-              <Name>Index</Name>
-              <Value>0</Value>
-            </Expression>
-          </Nodes>
-          <Edges>
-            <Edge>
-              <From>0</From>
-              <To>10</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>2</From>
-              <To>0</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>3</From>
-              <To>1</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>4</From>
-              <To>1</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>5</From>
-              <To>3</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>5</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>0</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>7</From>
-              <To>5</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>8</From>
-              <To>6</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>2</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>7</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>11</From>
-              <To>9</To>
-              <Label>Source1</Label>
-            </Edge>
-          </Edges>
-        </Workflow>
-      </Expression>
-      <Expression xsi:type="Combinator">
-        <Combinator xsi:type="q1:ImageWriter">
-          <q1:Path>\\.\pipe\videopipe3</q1:Path>
-          <q1:Suffix>None</q1:Suffix>
-          <q1:Overwrite>false</q1:Overwrite>
+        <Combinator xsi:type="cv:ImageWriter">
+          <cv:Path>\\.\pipe\videopipe2</cv:Path>
+          <cv:Suffix>None</cv:Suffix>
+          <cv:Overwrite>false</cv:Overwrite>
         </Combinator>
       </Expression>
       <Expression xsi:type="NestedWorkflow">
         <Name>Box3</Name>
         <Workflow>
           <Nodes>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="FileName" DisplayName="PinFileName" />
             </Expression>
-            <Expression xsi:type="q2:CsvWriter">
-              <q2:FileName>empty.csv</q2:FileName>
-              <q2:Append>false</q2:Append>
-              <q2:Overwrite>true</q2:Overwrite>
-              <q2:Suffix>None</q2:Suffix>
-              <q2:IncludeHeader>false</q2:IncludeHeader>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.Image</Selector>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.embeddedGPIOPinState</Selector>
-            </Expression>
-            <Expression xsi:type="ExternalizedPropertyOfStringCsvWriter">
-              <MemberName>FileName</MemberName>
-              <Name>PinFileName</Name>
-              <Value>empty.csv</Value>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="DueTime" DisplayName="StartTime" />
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
+              <Combinator xsi:type="rx:Timer">
+                <rx:DueTime>PT23H</rx:DueTime>
+                <rx:Period>PT23H</rx:Period>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="Index" />
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="Timer">
-                <DueTime>PT23H</DueTime>
-                <Period>PT23H</Period>
+              <Combinator xsi:type="p1:FlyCapture">
+                <p1:Index>2</p1:Index>
+                <p1:ColorProcessing>Default</p1:ColorProcessing>
               </Combinator>
             </Expression>
             <Expression xsi:type="MemberSelector">
-              <Selector>Source.Metadata</Selector>
+              <Selector>Image</Selector>
             </Expression>
-            <Expression xsi:type="ExternalizedTimeSpanOfTimer">
-              <MemberName>DueTime</MemberName>
-              <Name>StartTime</Name>
-              <Value>PT23H</Value>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Metadata</Selector>
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="q3:FlyCapture">
-                <q3:Index>3</q3:Index>
-                <q3:ColorProcessing>Default</q3:ColorProcessing>
-              </Combinator>
+              <Combinator xsi:type="rx:SubscribeWhen" />
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>embeddedGPIOPinState</Selector>
+            </Expression>
+            <Expression xsi:type="io:CsvWriter">
+              <io:FileName>temp/empty3.csv</io:FileName>
+              <io:Append>false</io:Append>
+              <io:Overwrite>true</io:Overwrite>
+              <io:Suffix>None</io:Suffix>
+              <io:IncludeHeader>false</io:IncludeHeader>
+              <io:CompatibilityMode>true</io:CompatibilityMode>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:SubscribeWhen" />
             </Expression>
             <Expression xsi:type="WorkflowOutput" />
-            <Expression xsi:type="ExternalizedPropertyOfInt32FlyCapture">
-              <MemberName>Index</MemberName>
-              <Name>Index</Name>
-              <Value>0</Value>
-            </Expression>
           </Nodes>
           <Edges>
-            <Edge>
-              <From>0</From>
-              <To>10</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>2</From>
-              <To>0</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>3</From>
-              <To>1</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>4</From>
-              <To>1</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>5</From>
-              <To>3</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>5</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>0</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>7</From>
-              <To>5</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>8</From>
-              <To>6</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>2</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>7</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>11</From>
-              <To>9</To>
-              <Label>Source1</Label>
-            </Edge>
+            <Edge From="0" To="9" Label="Source2" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="2" To="7" Label="Source2" />
+            <Edge From="2" To="10" Label="Source2" />
+            <Edge From="3" To="4" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+            <Edge From="4" To="6" Label="Source1" />
+            <Edge From="5" To="10" Label="Source1" />
+            <Edge From="6" To="7" Label="Source1" />
+            <Edge From="7" To="8" Label="Source1" />
+            <Edge From="8" To="9" Label="Source1" />
+            <Edge From="10" To="11" Label="Source1" />
           </Edges>
         </Workflow>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:ImageWriter">
+          <cv:Path>\\.\pipe\videopipe3</cv:Path>
+          <cv:Suffix>None</cv:Suffix>
+          <cv:Overwrite>false</cv:Overwrite>
+        </Combinator>
       </Expression>
       <Expression xsi:type="NestedWorkflow">
         <Name>Box4</Name>
         <Workflow>
           <Nodes>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="FileName" DisplayName="PinFileName" />
             </Expression>
-            <Expression xsi:type="q2:CsvWriter">
-              <q2:FileName>D:\LBurg\Pavtometry_Video\PP4_pinstate_2019-03-26-134513.csv</q2:FileName>
-              <q2:Append>false</q2:Append>
-              <q2:Overwrite>true</q2:Overwrite>
-              <q2:Suffix>None</q2:Suffix>
-              <q2:IncludeHeader>false</q2:IncludeHeader>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.Image</Selector>
-            </Expression>
-            <Expression xsi:type="MemberSelector">
-              <Selector>Source.embeddedGPIOPinState</Selector>
-            </Expression>
-            <Expression xsi:type="ExternalizedPropertyOfStringCsvWriter">
-              <MemberName>FileName</MemberName>
-              <Name>PinFileName</Name>
-              <Value>empty.csv</Value>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="DueTime" DisplayName="StartTime" />
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="SubscribeWhen" />
+              <Combinator xsi:type="rx:Timer">
+                <rx:DueTime>PT23H</rx:DueTime>
+                <rx:Period>PT23H</rx:Period>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="Index" />
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="Timer">
-                <DueTime>PT0S</DueTime>
-                <Period>PT23H</Period>
+              <Combinator xsi:type="p1:FlyCapture">
+                <p1:Index>3</p1:Index>
+                <p1:ColorProcessing>Default</p1:ColorProcessing>
               </Combinator>
             </Expression>
             <Expression xsi:type="MemberSelector">
-              <Selector>Source.Metadata</Selector>
+              <Selector>Image</Selector>
             </Expression>
-            <Expression xsi:type="ExternalizedTimeSpanOfTimer">
-              <MemberName>DueTime</MemberName>
-              <Name>StartTime</Name>
-              <Value>PT23H</Value>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Metadata</Selector>
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="q3:FlyCapture">
-                <q3:Index>1</q3:Index>
-                <q3:ColorProcessing>Default</q3:ColorProcessing>
-              </Combinator>
+              <Combinator xsi:type="rx:SubscribeWhen" />
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>embeddedGPIOPinState</Selector>
+            </Expression>
+            <Expression xsi:type="io:CsvWriter">
+              <io:FileName>temp/empty4.csv</io:FileName>
+              <io:Append>false</io:Append>
+              <io:Overwrite>true</io:Overwrite>
+              <io:Suffix>None</io:Suffix>
+              <io:IncludeHeader>false</io:IncludeHeader>
+              <io:CompatibilityMode>true</io:CompatibilityMode>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:SubscribeWhen" />
             </Expression>
             <Expression xsi:type="WorkflowOutput" />
-            <Expression xsi:type="ExternalizedPropertyOfInt32FlyCapture">
-              <MemberName>Index</MemberName>
-              <Name>Index</Name>
-              <Value>0</Value>
-            </Expression>
           </Nodes>
           <Edges>
-            <Edge>
-              <From>0</From>
-              <To>10</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>2</From>
-              <To>0</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>3</From>
-              <To>1</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>4</From>
-              <To>1</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>5</From>
-              <To>3</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>5</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>6</From>
-              <To>0</To>
-              <Label>Source2</Label>
-            </Edge>
-            <Edge>
-              <From>7</From>
-              <To>5</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>8</From>
-              <To>6</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>2</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>9</From>
-              <To>7</To>
-              <Label>Source1</Label>
-            </Edge>
-            <Edge>
-              <From>11</From>
-              <To>9</To>
-              <Label>Source1</Label>
-            </Edge>
+            <Edge From="0" To="9" Label="Source2" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="2" To="7" Label="Source2" />
+            <Edge From="2" To="10" Label="Source2" />
+            <Edge From="3" To="4" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+            <Edge From="4" To="6" Label="Source1" />
+            <Edge From="5" To="10" Label="Source1" />
+            <Edge From="6" To="7" Label="Source1" />
+            <Edge From="7" To="8" Label="Source1" />
+            <Edge From="8" To="9" Label="Source1" />
+            <Edge From="10" To="11" Label="Source1" />
           </Edges>
         </Workflow>
       </Expression>
       <Expression xsi:type="Combinator">
-        <Combinator xsi:type="q1:ImageWriter">
-          <q1:Path>\\.\pipe\videopipe4</q1:Path>
-          <q1:Suffix>None</q1:Suffix>
-          <q1:Overwrite>false</q1:Overwrite>
+        <Combinator xsi:type="cv:ImageWriter">
+          <cv:Path>\\.\pipe\videopipe4</cv:Path>
+          <cv:Suffix>None</cv:Suffix>
+          <cv:Overwrite>false</cv:Overwrite>
         </Combinator>
       </Expression>
     </Nodes>
     <Edges>
-      <Edge>
-        <From>1</From>
-        <To>2</To>
-        <Label>Source1</Label>
-      </Edge>
-      <Edge>
-        <From>3</From>
-        <To>0</To>
-        <Label>Source1</Label>
-      </Edge>
-      <Edge>
-        <From>5</From>
-        <To>4</To>
-        <Label>Source1</Label>
-      </Edge>
-      <Edge>
-        <From>6</From>
-        <To>7</To>
-        <Label>Source1</Label>
-      </Edge>
+      <Edge From="0" To="1" Label="Source1" />
+      <Edge From="2" To="3" Label="Source1" />
+      <Edge From="4" To="5" Label="Source1" />
+      <Edge From="6" To="7" Label="Source1" />
     </Edges>
   </Workflow>
-  <ExtensionTypes>
-    <Type>Bonsai.Vision.ImageWriter, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.Reactive.SubscribeWhen, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.IO.CsvWriter, Bonsai.System, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.Expressions.ExternalizedProperty`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Bonsai.IO.CsvWriter, Bonsai.System, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null]], Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.Reactive.Timer, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.Expressions.ExternalizedTimeSpan`1[[Bonsai.Reactive.Timer, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null]], Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.PointGrey.FlyCapture, Bonsai.PointGrey, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-    <Type>Bonsai.Expressions.ExternalizedProperty`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Bonsai.PointGrey.FlyCapture, Bonsai.PointGrey, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null]], Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
-  </ExtensionTypes>
 </WorkflowBuilder>
