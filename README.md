@@ -25,7 +25,7 @@ This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-f
 ### Usage
 
 1. **Initial setup** Before you run the program for the first time:
-   1. Edit the Bonsai workflow to match the number of cameras connected to your computer, the current workflow is configured for 4 cameras.
+   1. Edit the Bonsai workflow to match the number of cameras connected to your computer, the current workflow is configured for 4 cameras. 
    2. In the file *config.py*:
       1. Edit the `camera_IDs` variable to indicate the IDs of the Point Grey cameras on each box.  The IDs are integers which Bonsai uses to identify which camera is which.   If you have 4 cameras the IDs will be 0,1,2,3, but what determines the ordering is unclear. 
       2. Edit the `bonsai_path` variable to indicate the location of the Bonsai executable.  Edit the `workflow_path` variable to indicate the location of the file *multi_recorder_cuda_CLI.bonsai*
@@ -36,18 +36,18 @@ This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-f
    2. Edit the `data_dir` variable to indicate the directory where data should be saved.
 3. **Running an experiment:**
    1. Run the file multi_camera_acquisition.py.  This will launch Bonsai and start acquiring video.
-   2. When you have finished the session, press stop on Bonsai, then wait 5 seconds and close Bonsai. **Do not save any changes to the .bonsai file**, doing so will break the program. If you accidentally do so, open the .bonsai file in Bonsai, click on each 'Box' node in turn, look in the 'properties' bar for the variables under the 'Misc' header and ensure the 'PinFileName' variable is set to 'empty.csv' and the 'StartTime' variable is set to '23:00:00'. 
+   2. When you have finished the session, press stop on Bonsai, then wait 5 seconds and close Bonsai. 
 
 ### How it works:
 
 The Bonsai workflow *multi_recorder_cuda_CLI.bonsai* contains a set of identical nested workflows named `Box1`, `Box2` etc, each of which handles acquisition from a single Point Grey camera.  
 
-To allow acquisition from only those cameras specified by the config file `subjects` dictionary, a `Timer` node in combination with `SubscribeWhen` nodes is used to gate whether output from the cameras is saved to file.  
+To allow acquisition from only those cameras specified by the config file `subjects` dictionary, a `Condition` node is used to gate whether output from the cameras is saved to file.
 
 The GPIO pin state data is sent to a `CsvWriter` node to be saved to disk as a .csv file.  The video data is sent to an `ImageWriter` node which pipes the data to an FFMPEG instance which H264 compresses and saves it to disk.
 
 The Python script *multi_camera_acquisition.py*  launches Bonsai from the command line, specifying the workflow to run, and setting the value of workflow variables which specify the camera IDs, whether data  from each camera should be saved, and the file name to use for the .csv files.
 
-Once Bonsai opens pipes to send video data to FFMPEG, the Python script launche an FFMPEG instance for each camera and configures them with the file path to save the data to.
+Once Bonsai opens pipes to send video data to FFMPEG, the Python script launches an FFMPEG instance for each camera and configures them with the file path to save the data to.
 
 When the script detects that Bonsai has been closed, it closes the FFMPEG instances.
