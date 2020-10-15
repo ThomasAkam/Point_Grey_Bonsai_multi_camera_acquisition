@@ -38,16 +38,12 @@ This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-f
    1. Run the file multi_camera_acquisition.py.  This will launch Bonsai and start acquiring video.
    2. When you have finished the session, press stop on Bonsai, then wait 5 seconds and close Bonsai. 
 
+**Note - CPU usage:** As the video compression is run on the GPU, CPU usage should be low.  If CPU usage goes to 100% and stays there while Bonsai is running, this is due to the Point Grey driver disabling CPU idle states.  On Windows, this can be prevented by setting registry entry `EnhancedHaltStateDisable` to 0, found at *HKEY_LOCAL_MACHINE\SOFTWARE\Point Grey Research, Inc.* for 64-bit FlyCap2 installs, and *HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Point Grey Research, Inc.*  for 32-bit.  In the Point Grey RegistryControlUtility this value is controlled by the checkbox `Disable C1E State`.
+
 ### How it works:
-
-The Bonsai workflow *multi_recorder_cuda_CLI.bonsai* contains a set of identical nested workflows named `Box1`, `Box2` etc, each of which handles acquisition from a single Point Grey camera.  
-
-To allow acquisition from only those cameras specified by the config file `subjects` dictionary, a `Condition` node is used to gate whether output from the cameras is saved to file.
-
-The GPIO pin state data is sent to a `CsvWriter` node to be saved to disk as a .csv file.  The video data is sent to an `ImageWriter` node which pipes the data to an FFMPEG instance which H264 compresses and saves it to disk.
 
 The Python script *multi_camera_acquisition.py*  launches Bonsai from the command line, specifying the workflow to run, and setting the value of workflow variables which specify the camera IDs, whether data  from each camera should be saved, and the file name to use for the .csv files.
 
-Once Bonsai opens pipes to send video data to FFMPEG, the Python script launches an FFMPEG instance for each camera and configures them with the file path to save the data to.
+The Bonsai workflow *multi_recorder_cuda_CLI.bonsai* contains a set of identical nested workflows named `Box1`, `Box2` etc, each of which handles acquisition from a single Point Grey camera.  To allow acquisition from only those cameras specified by the config file `subjects` dictionary, a `Condition` node is used to gate whether output from the cameras is saved to file.  The GPIO pin state data is sent to a `CsvWriter` node to be saved to disk as a .csv file.  The video data is sent to an `ImageWriter` node which pipes the data to an FFMPEG instance which H264 compresses and saves it to disk.
 
-When the script detects that Bonsai has been closed, it closes the FFMPEG instances.
+Once Bonsai opens pipes to send video data to FFMPEG, the Python script launches an FFMPEG instance for each camera and configures them with the file path to save the data to.  When the script detects that Bonsai has been closed, it closes the FFMPEG instances.
