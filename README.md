@@ -1,8 +1,8 @@
-# Point Grey - Bonsai multi camera acquisition
+# Point Grey/FLIR - Bonsai multi camera acquisition
 
 This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-flow and Python script which together:
 
-- Acquire video data and GPIO pin state from multiple Point Grey cameras simultaneously.
+- Acquire video data and GPIO pin state from multiple FLIR / Point Grey cameras simultaneously.
 - H264 compress the video data on the graphics card (GPU) allowing video data from multiple cameras to be compressed in parallel while minimally loading the CPU.
 - Allow the user to specify in a config file which cameras to acquire from and what subject IDs to use for file names from each camera.
 - Save the video data as .mp4 files and the GPIO pin state as as .csv files, with file names given by subject_ID and data/time-stamp when acquisition started.
@@ -18,9 +18,11 @@ This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-f
 - [FFMPEG / libav](https://developer.nvidia.com/ffmpeg) 
 - [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit)
 - [NVENC compatible NVIDIA GPU](https://developer.nvidia.com/video-encode-decode-gpu-support-matrix)
-- Point Grey Camera
+- Point Grey /FLIR Bonsai compatible Camera
 
 *Note:* Consumer grade NVIDIA GPUs (GeForce) are typically software restricted to support a maximum of 2 concurrent NVENC sessions. The [Keylase driver patch](https://github.com/keylase/nvidia-patch) can be used to remove this restriction allowing video data from more than 2 cameras to be compressed in parallel on a single graphics card.
+
+For information on setting up multiple USB3 cameras on a single computer, see [this](https://www.flir.co.uk/support-center/iis/machine-vision/application-note/usb-3.1-multiple-camera-setup/) FLIR application note.
 
 ### Usage
 
