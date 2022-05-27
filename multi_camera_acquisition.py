@@ -7,7 +7,7 @@
 # use the GPU to H264 compress the video data. When the script detects that Bonsai 
 # has been closed it closes the FFMPEG instances.
 
-# (c) Thomas Akam 2019-2020.  Licenced under the GNU General Public License v3.
+# (c) Thomas Akam 2019-2022.  Licenced under the GNU General Public License v3.
 
 import os
 import time
@@ -52,6 +52,8 @@ while not all(pipes_open):
                 video_file_path = os.path.join(data_dir, subject + '_' + datetime_str + '.mp4')
                 ffmpeg_processes.append(Popen(r'ffmpeg -y -f rawvideo -vcodec rawvideo -s 1280x1024 -pix_fmt gray -r 60 -i {} -c:v h264_nvenc -profile:v high -preset slow -an {}'.format(pipe, video_file_path)))
     time.sleep(0.1)
+
+os.system("title " + 'Camera acquisition') # Set name of terminal window.
 
 # Wait untill Bonsai has stopped running.
 
