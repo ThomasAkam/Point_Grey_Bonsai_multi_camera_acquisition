@@ -15,29 +15,29 @@ import time
 from datetime import datetime
 from subprocess import Popen
 
-from config import subjects, data_dir, camera_IDs, bonsai_path, workflow_path
+from config import subjects, data_dir, camera_IDs, bonsai_path, workflow_path, framerate, camera_res, downsample
 
 datetime_str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
 
-command = bonsai_path + ' ' +  workflow_path  + ' --start'
+b_command = f'{bonsai_path} {workflow_path} --start' # Command to launch Bonsai.
 
 # Append subject specific info to Bonsai launch command.
 
 for box in camera_IDs.keys():
-    command += ' -p:Box{}.Index={}'.format(box, camera_IDs[box])
+    b_command += f' -p:Box{box}.Index={camera_IDs[box]}'
     if box in subjects.keys(): # Box is being used.
         pinstate_file_path = os.path.join(data_dir, subjects[box] + '_pinstate_' + datetime_str + '.csv')
-        command += ' -p:Box{}.Enable=True'.format(box) + \
-                   ' -p:Box{}.PinFileName={}'.format(box, pinstate_file_path)
+        b_command += f' -p:Box{box}.Enable=True -p:Box{box}.PinFileName={pinstate_file_path}'
     else: # Box not being used.
-        command += ' -p:Box{}.Enable=False'.format(box) + \
-                   ' -p:Box{}.PinFileName=temp\\empty{}.csv'.format(box, box)
+        b_command += f' -p:Box{box}.Enable=False -p:Box{box}.PinFileName=temp\\empty{box}.csv'
 
 # Launch Bonsai
 
-bonsai_process = Popen(command)
+bonsai_process = Popen(b_command)
 
 # Launch FFMPEG instances once video pipes are open.
+
+output_res = (camera_res[0]//downsample,camera_res[1]//downsample) if downsample else camera_res
 
 pipes_open = [False for i in subjects.items()]
 
@@ -50,7 +50,11 @@ while not all(pipes_open):
             if pipe.split('\\')[-1] in os.listdir(r'\\.\pipe'):
                 pipes_open[i] = True
                 video_file_path = os.path.join(data_dir, subject + '_' + datetime_str + '.mp4')
-                ffmpeg_processes.append(Popen(r'ffmpeg -y -f rawvideo -vcodec rawvideo -s 1280x1024 -pix_fmt gray -r 60 -i {} -c:v h264_nvenc -profile:v high -preset slow -an {}'.format(pipe, video_file_path)))
+                ffmpeg_processes.append(Popen(
+                    fr'ffmpeg -y -f rawvideo -vcodec rawvideo -s {camera_res[0]}x{camera_res[1]} '
+                    fr'-pix_fmt gray -r {framerate} -i {pipe} -c:v h264_nvenc '
+                    fr'-profile:v high -preset slow -vf scale={output_res[0]}:{output_res[1]} -an {video_file_path}'
+                    ))
     time.sleep(0.1)
 
 os.system("title " + 'Camera acquisition') # Set name of terminal window.

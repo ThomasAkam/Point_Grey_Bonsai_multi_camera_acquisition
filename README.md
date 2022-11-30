@@ -29,8 +29,10 @@ For information on setting up multiple USB3 cameras on a single computer, see [t
 1. **Initial setup** Before you run the program for the first time:
    1. Edit the Bonsai workflow to match the number of cameras connected to your computer, the current workflow is configured for 4 cameras. 
    2. In the file *config.py*:
-      1. Edit the `camera_IDs` variable to indicate the IDs of the Point Grey cameras on each box.  The IDs are integers which Bonsai uses to identify which camera is which.   If you have 4 cameras the IDs will be 0,1,2,3, but what determines the ordering is unclear. 
-      2. Edit the `bonsai_path` variable to indicate the location of the Bonsai executable.  Edit the `workflow_path` variable to indicate the location of the file *multi_recorder_cuda_CLI.bonsai*
+      1. Edit the `camera_IDs` variable to indicate the IDs of the Point Grey cameras on each box.  The IDs are integers which Bonsai uses to identify which camera is which.   If you have 4 cameras the IDs will be 0,1,2,3, but what determines the ordering is unclear.
+      2. Edit the `camera_res` and `framerate` variables to match the resolution and framerate of your camera.
+      3. If you want to save the video data at a lower resolution than the camera outputs, set the `downsample` variable to a number, e.g. `downsample=2` will reduce the width and height of the output video file resolution by a factor of 2, resulting in video files that are ~4x smaller.
+      4. Edit the `bonsai_path` variable to indicate the location of the Bonsai executable.  Edit the `workflow_path` variable to indicate the location of the file *multi_recorder_cuda_CLI.bonsai*
    3. In the Point Grey Fly Capture utility, connect to the cameras you will be using and under **Advanced Camera Settings** tick the GPIO pin state box to tell the camera to output the state of the GPIO pins on each frame.  Save the setting to the camera by so they will be maintained after the camera is disconnected, to do this, select channel 1 under Memory Channels and press the save button.
    4. Make sure ffmpeg.exe is on the windows PATH.
 2. **Setting up an experiment:**
