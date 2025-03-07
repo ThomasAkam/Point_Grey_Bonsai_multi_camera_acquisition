@@ -20,8 +20,6 @@ This repository contains a [Bonsai](https://bonsai-rx.org//introduction/) work-f
 - [NVENC compatible NVIDIA GPU](https://developer.nvidia.com/video-encode-decode-gpu-support-matrix)
 - Point Grey /FLIR Bonsai compatible Camera
 
-*Note:* Consumer grade NVIDIA GPUs (GeForce) are typically software restricted to support a maximum of 2 concurrent NVENC sessions. The [Keylase driver patch](https://github.com/keylase/nvidia-patch) can be used to remove this restriction allowing video data from more than 2 cameras to be compressed in parallel on a single graphics card.
-
 For information on setting up multiple USB3 cameras on a single computer, see [this](https://www.flir.co.uk/support-center/iis/machine-vision/application-note/usb-3.1-multiple-camera-setup/) FLIR application note.
 
 ### Usage
